@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { VehicleServices } from "./vehicle.service";
+import { BookingServices } from "../booking/booking.service";
 
 const CreateVehicle = async (req: Request, res: Response) => {
   const {
@@ -30,9 +31,20 @@ const CreateVehicle = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
-    res.status(400).json({
+    if (
+      (error.message =
+        'duplicate key value violates unique constraint "vehicles_registration_number_key"')
+    ) {
+      res.status(400).json({
+        success: false,
+        message: "You can not create vehicle with same registration number. ",
+        error: "Bad Request",
+      });
+    }
+    res.status(500).json({
       success: false,
       message: error.message,
+      error: "Internal Server Error",
     });
   }
 };
@@ -50,11 +62,15 @@ const GetAllVehicles = async (req: Request, res: Response) => {
       res.status(200).json({
         success: true,
         message: "No vehicles found",
-        data: result.rows,
+        data: [],
       });
     }
   } catch (error: any) {
-    res.status(400).json({ success: false, error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: "Internal Server Error",
+    });
   }
 };
 
@@ -73,12 +89,14 @@ const GetAVehicleById = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "Vehicle Not Found",
+        error: "Not Found",
       });
     }
   } catch (error: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: error.message,
+      error: "Internal Server Error",
     });
   }
 };
@@ -114,12 +132,14 @@ const UpdateVehicle = async (req: Request, res: Response) => {
         res.status(404).json({
           success: false,
           message: "Vehicle Not found",
+          error: "Not Found",
         }),
       ];
   } catch (error: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: error.message,
+      error: "Internal Server Error",
     });
   }
 };
@@ -127,6 +147,18 @@ const UpdateVehicle = async (req: Request, res: Response) => {
 const DeleteVehicle = async (req: Request, res: Response) => {
   const { vehicleId } = req.params;
   try {
+    const bookingResult = await BookingServices.getBookingsForVehicles(
+      Number(vehicleId)
+    );
+
+    if (bookingResult.rows && bookingResult.rows.length > 0) {
+      res.status(400).json({
+        success: false,
+        message: "You can not delete a vehicle if it has active bookings",
+        error: "Bad Request",
+      });
+    }
+
     const result = await VehicleServices.DeleteVehicle(Number(vehicleId));
     if (result.rowCount && result.rowCount == 1) {
       res.status(200).json({
@@ -137,12 +169,14 @@ const DeleteVehicle = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "Vehicle Not Found",
+        error: "Not Found",
       });
     }
   } catch (error: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: error.message,
+      error: "Internal Server Error",
     });
   }
 };

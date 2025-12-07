@@ -38,8 +38,8 @@ export const initDb = async () => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
-        customer_id INTEGER NOT NULL REFERENCES users(id),
-        vehicle_id INTEGER NOT NULL REFERENCES vehicles(id),
+        customer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        vehicle_id INTEGER NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
         rent_start_date DATE NOT NULL,
         rent_end_date DATE NOT NULL,
           CONSTRAINT check_bookings_date CHECK (rent_end_date>rent_start_date),

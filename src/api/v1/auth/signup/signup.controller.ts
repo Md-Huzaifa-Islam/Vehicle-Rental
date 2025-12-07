@@ -1,13 +1,22 @@
 import { Request, Response } from "express";
-import { pool } from "../../../../config/db";
+import { SignUpServices } from "./signup.service";
 
 const SignUpUser = async (req: Request, res: Response) => {
   const { name, email, password, phone, role } = req.body;
+  if (password.trim().length < 6) {
+    res.status(400).json({
+      success: false,
+      message: "Password must be minimum 6 character length",
+      error: "Bad Request",
+    });
+  }
   try {
-    const result = await pool.query(
-      `
-        INSERT INTO users(name, email ,password, phone, role) VALUES ($1,$2,$3,$4,$5) RETURNING id, name, email, phone, role`,
-      [name, email, password, phone, role]
+    const result = await SignUpServices.SignUpUser(
+      name,
+      email.trim().toLowerCase(),
+      password,
+      phone,
+      role
     );
     if (result.rows && result.rows.length > 0) {
       res.status(201).json({
@@ -16,15 +25,17 @@ const SignUpUser = async (req: Request, res: Response) => {
         data: result.rows[0],
       });
     } else {
-      res.status(400).json({
+      res.status(500).json({
         success: false,
         message: "Failed to registere user",
+        error: "Internal Server Error",
       });
     }
   } catch (error: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: error.message,
+      error: "Internal Server Error",
     });
   }
 };

@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
-import { UserRoute } from "./modules/user/user.routes";
 import { AuthRoute } from "./auth/auth.routes";
-import { VehicleRoute } from "./modules/vehicle/vehicle.routes";
-import { BookingRoute } from "./modules/booking/booking.routes";
+import { BookingRoute } from "./booking/booking.routes";
+import { UserRoute } from "./user/user.routes";
+import { VehicleRoute } from "./vehicle/vehicle.routes";
 
 const router = Router();
 
