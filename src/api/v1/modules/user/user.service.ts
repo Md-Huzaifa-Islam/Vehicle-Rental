@@ -33,8 +33,14 @@ const deleteUser = async (id: number) => {
   return result;
 };
 
-export const userServices = {
+const getUser = async (id: number) => {
+  const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
+  return result;
+};
+
+export const UserServices = {
   getAllUsers,
   updateUser,
   deleteUser,
+  getUser,
 };

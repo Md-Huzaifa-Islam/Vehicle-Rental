@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { userServices } from "./user.service";
+import { UserServices } from "./user.service";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const result = await userServices.getAllUsers();
+    const result = await UserServices.getAllUsers();
     res.status(200).json({
       success: true,
       data: result.rows,
@@ -31,7 +31,7 @@ const UpdateUser = async (req: Request, res: Response) => {
       {} as Record<string, any>
     );
 
-    const result = await userServices.updateUser(
+    const result = await UserServices.updateUser(
       Number(userId),
       filteredUpdates
     );
@@ -59,7 +59,7 @@ const UpdateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
-    const result = await userServices.deleteUser(Number(userId));
+    const result = await UserServices.deleteUser(Number(userId));
     if (result.rowCount && result.rowCount == 1)
       res.status(200).json({
         success: true,
@@ -80,7 +80,7 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export const userControllers = {
+export const UserControllers = {
   getAllUsers,
   UpdateUser,
   deleteUser,
