@@ -22,7 +22,7 @@ const CreateVehicle = async (req: Request, res: Response) => {
       res.status(201).json({
         success: true,
         message: "Vehicle created successfully",
-        data: result.rows,
+        data: result.rows[0],
       });
     } else {
       res.status(400).json({
@@ -38,13 +38,13 @@ const CreateVehicle = async (req: Request, res: Response) => {
       res.status(400).json({
         success: false,
         message: "You can not create vehicle with same registration number. ",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -69,7 +69,7 @@ const GetAllVehicles = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -89,14 +89,14 @@ const GetAVehicleById = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "Vehicle Not Found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -132,14 +132,14 @@ const UpdateVehicle = async (req: Request, res: Response) => {
         res.status(404).json({
           success: false,
           message: "Vehicle Not found",
-          error: "Not Found",
+          errors: "Not Found",
         }),
       ];
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -155,7 +155,7 @@ const DeleteVehicle = async (req: Request, res: Response) => {
       res.status(400).json({
         success: false,
         message: "You can not delete a vehicle if it has active bookings",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
 
@@ -169,14 +169,14 @@ const DeleteVehicle = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "Vehicle Not Found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };

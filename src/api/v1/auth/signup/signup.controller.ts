@@ -7,7 +7,7 @@ const SignUpUser = async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       message: "Password must be minimum 6 character length",
-      error: "Bad Request",
+      errors: "Bad Request",
     });
   }
   try {
@@ -28,14 +28,14 @@ const SignUpUser = async (req: Request, res: Response) => {
       res.status(500).json({
         success: false,
         message: "Failed to registere user",
-        error: "Internal Server Error",
+        errors: "Internal Server Error",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };

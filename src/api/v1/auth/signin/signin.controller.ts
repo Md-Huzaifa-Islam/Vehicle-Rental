@@ -18,14 +18,14 @@ const SignIn = async (req: Request, res: Response) => {
       res.status(result.status).json({
         success: false,
         message: result.message,
-        error: result.error,
+        errors: result.errors,
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };

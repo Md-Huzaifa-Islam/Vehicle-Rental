@@ -12,7 +12,7 @@ const createBooking = async (req: Request, res: Response) => {
       res.status(403).json({
         success: false,
         message: "Valid token but insufficient permissions",
-        error: "Forbidden",
+        errors: "Forbidden",
       });
     }
 
@@ -24,13 +24,13 @@ const createBooking = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "Vehicle not found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     if (vehicleResult.rows[0].availability_status == "booked") {
       res.status(400).json({
         success: false,
         message: "Vehicle already booked",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
 
@@ -40,7 +40,7 @@ const createBooking = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "User not found",
-        error: "Not Found",
+        errors: "Not Found",
       });
 
     // verify date
@@ -51,7 +51,7 @@ const createBooking = async (req: Request, res: Response) => {
       res.status(400).json({
         success: false,
         message: "End date must be after start date",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
 
@@ -94,14 +94,14 @@ const createBooking = async (req: Request, res: Response) => {
       res.status(500).json({
         success: false,
         message: "Failed to create bookings",
-        error: "Internal Server Error",
+        errors: "Internal Server Error",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -127,7 +127,7 @@ const getBookings = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };
@@ -144,7 +144,7 @@ const updateBooking = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: "Status is required",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
 
@@ -157,7 +157,7 @@ const updateBooking = async (req: Request, res: Response) => {
       return res.status(404).json({
         success: false,
         message: "Booking not found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     }
 
@@ -170,7 +170,7 @@ const updateBooking = async (req: Request, res: Response) => {
         return res.status(403).json({
           success: false,
           message: "Customers can only cancel bookings",
-          error: "Forbidden",
+          errors: "Forbidden",
         });
       }
 
@@ -179,7 +179,7 @@ const updateBooking = async (req: Request, res: Response) => {
         return res.status(403).json({
           success: false,
           message: "Valid token but insufficient permissions",
-          error: "Forbidden",
+          errors: "Forbidden",
         });
       }
 
@@ -191,7 +191,7 @@ const updateBooking = async (req: Request, res: Response) => {
         return res.status(400).json({
           success: false,
           message: "Cannot cancel booking after start date",
-          error: "Bad Request",
+          errors: "Bad Request",
         });
       }
 
@@ -217,7 +217,7 @@ const updateBooking = async (req: Request, res: Response) => {
         return res.status(403).json({
           success: false,
           message: "Admins can only mark bookings as returned",
-          error: "Forbidden",
+          errors: "Forbidden",
         });
       }
 
@@ -250,14 +250,14 @@ const updateBooking = async (req: Request, res: Response) => {
       return res.status(403).json({
         success: false,
         message: "Unauthorized",
-        error: "Forbidden",
+        errors: "Forbidden",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };

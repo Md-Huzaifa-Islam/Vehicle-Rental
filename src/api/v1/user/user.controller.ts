@@ -13,7 +13,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
       message: error.message,
     });
   }
@@ -25,10 +25,10 @@ const UpdateUser = async (req: Request, res: Response) => {
     const updates = req.body;
 
     if (req.user && req.user.role === "customer" && userId != req.user.id) {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: "Valid token but insufficient permissions",
-        error: "Forbidden",
+        errors: "Forbidden",
       });
     }
 
@@ -51,7 +51,7 @@ const UpdateUser = async (req: Request, res: Response) => {
       return res.status(404).json({
         success: false,
         message: "User Not Found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     }
 
@@ -63,7 +63,7 @@ const UpdateUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
       message: error.message,
     });
   }
@@ -80,7 +80,7 @@ const deleteUser = async (req: Request, res: Response) => {
       res.status(400).json({
         success: false,
         message: "Can not delete user who have active bookings",
-        error: "Bad Request",
+        errors: "Bad Request",
       });
     }
 
@@ -94,14 +94,14 @@ const deleteUser = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "User not found",
-        error: "Not Found",
+        errors: "Not Found",
       });
     }
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
-      error: "Internal Server Error",
+      errors: "Internal Server Error",
     });
   }
 };

@@ -12,7 +12,7 @@ const SignIn = async (email: string, password: string) => {
     return {
       status: 404,
       message: "User not found",
-      error: "Not Found",
+      errors: "Not Found",
     };
   }
   const user = result.rows[0];
@@ -21,7 +21,7 @@ const SignIn = async (email: string, password: string) => {
     return {
       status: 400,
       message: "You have entered incorrect password",
-      error: "Bad Request",
+      errors: "Bad Request",
     };
   }
   // everything is ok now lets send token also

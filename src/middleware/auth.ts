@@ -5,26 +5,28 @@ import { config } from "../config/config";
 const auth = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization;
-      if (!token) {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
           success: false,
           message: "Missing authentication token",
           error: "Unauthorized",
         });
       }
+      const token = authHeader.split(" ")[1];
       const decoded = jwt.verify(
-        token,
+        token as string,
         config.jwt_secret as string
       ) as JwtPayload;
       req.user = decoded;
+
       if (roles.length && roles.includes(decoded.role as string)) {
         next();
       } else {
         res.status(403).json({
           success: false,
           message: "Valid token but insufficient permissions",
-          error: "Forbidden",
+          errors: "Forbidden",
         });
       }
     } catch (error: any) {
@@ -32,13 +34,13 @@ const auth = (...roles: string[]) => {
         res.status(401).json({
           success: false,
           message: "Invalid authentication token",
-          error: "Unauthorized",
+          errors: "Unauthorized",
         });
       } else {
         res.status(500).json({
           success: false,
           message: error.message,
-          error: "Internal Server Error",
+          errors: "Internal Server Error",
         });
       }
     }
